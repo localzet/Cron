@@ -1,43 +1,66 @@
 {
   "name": "localzet/server",
-  "description": "Localzet Server - Асинхронный event-based сервер на PHP.",
+  "description": "Localzet Server is an asynchronous event-based server in PHP, offering high performance and scalability using modern technologies and standards.",
   "type": "library",
   "keywords": [
-    "localzet"
+    "asynchronous",
+    "event-based",
+    "server",
+    "PHP",
+    "security",
+    "localzet",
+    "AGPL",
+    "json",
+    "sockets",
+    "pcntl",
+    "posix",
+    "psr",
+    "performance"
   ],
-  "homepage": "https://www.localzet.com/webcore",
   "license": "AGPL-3.0-or-later",
   "authors": [
     {
+      "role": "Developer",
       "name": "Ivan Zorin",
       "email": "creator@localzet.com",
-      "homepage": "https://www.localzet.com",
-      "role": "Developer"
+      "homepage": "https://github.com/localzet"
     }
   ],
   "support": {
     "email": "support@localzet.com",
-    "issues": "https://github.com/localzet/server/issues",
-    "source": "https://github.com/localzet/server"
+    "issues": "https://github.com/localzet/Server/issues",
+    "source": "https://github.com/localzet/Server"
   },
   "require": {
-    "php": ">=8.2",
+    "php": "^8",
     "ext-json": "*",
-    "localzet/psr": ">=1.0",
     "ext-sockets": "*",
     "ext-pcntl": "*",
-    "ext-posix": "*"
+    "ext-posix": "*",
+    "localzet/events": "^1"
   },
   "suggest": {
     "ext-uv": "For better performance",
     "ext-ev": "For better performance",
     "ext-event": "For better performance",
+    "ext-swoole": "For better performance",
+    "ext-swow": "For better performance",
     "ext-redis": "For Redis Session Handler",
     "mongodb/mongodb": "For Mongo Session Handler"
   },
+  "conflict": {
+    "ext-swow": "<v1.0.0"
+  },
   "autoload": {
     "psr-4": {
-      "localzet\\": "src"
-    }
+      "localzet\\": "",
+      "localzet\\Server\\": "src"
+    },
+    "files": [
+      "Helpers.php"
+    ]
+  },
+  "require-dev": {
+    "rector/rector": "*"
   }
 }

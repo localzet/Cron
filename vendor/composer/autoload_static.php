@@ -6,23 +6,28 @@ namespace Composer\Autoload;
 
 class ComposerStaticInite67fba5911bcc762f63e7e8877a37b23
 {
+    public static $files = array (
+        '9f7e1596b82822c9378038d919fe585d' => __DIR__ . '/..' . '/localzet/server/Helpers.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'l' => 
         array (
-            'localzet\\PSR\\' => 13,
+            'localzet\\Server\\' => 16,
             'localzet\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'localzet\\PSR\\' => 
+        'localzet\\Server\\' => 
         array (
-            0 => __DIR__ . '/..' . '/localzet/psr/src',
+            0 => __DIR__ . '/..' . '/localzet/server/src',
         ),
         'localzet\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/',
-            1 => __DIR__ . '/..' . '/localzet/server/src',
+            0 => __DIR__ . '/../..' . '/src',
+            1 => __DIR__ . '/..' . '/localzet/events/src',
+            2 => __DIR__ . '/..' . '/localzet/server',
         ),
     );
 
