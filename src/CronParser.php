@@ -30,7 +30,7 @@ class CronParser
         if (!$this->isValid($crontab_string)) {
             throw new InvalidArgumentException('Invalid cron string: ' . $crontab_string);
         }
-        $start_time = $start_time ?: time();
+        $start_time ??= time();
         $date = $this->parseDate($crontab_string);
         if (in_array((int)date('i', $start_time), $date['minutes'])
             && in_array((int)date('G', $start_time), $date['hours'])
@@ -38,12 +38,11 @@ class CronParser
             && in_array((int)date('w', $start_time), $date['week'])
             && in_array((int)date('n', $start_time), $date['month'])
         ) {
-            return array_map(
-                function ($second) use ($start_time) {
-                    return $start_time + $second;
-                },
-                $date['second']
-            );
+            $result = [];
+            foreach ($date['second'] as $second) {
+                $result[] = $start_time + $second;
+            }
+            return $result;
         }
         return [];
     }
@@ -72,14 +71,18 @@ class CronParser
      */
     protected function parseSegment(string $string, int $min, int $max, int $start = null)
     {
-        $start = $start < $min ? $min : $start;
+        if ($start === null || $start < $min) {
+            $start = $min;
+        }
         $result = [];
         if ($string === '*') {
-            $result = range($start, $max);
-        } elseif (strpos($string, ',') !== false) {
+            for ($i = $start; $i <= $max; ++$i) {
+                $result[] = $i;
+            }
+        } elseif (str_contains($string, ',')) {
             $exploded = explode(',', $string);
             foreach ($exploded as $value) {
-                if (strpos($value, '/') !== false || strpos($string, '-') !== false) {
+                if (str_contains($value, '/') || str_contains($string, '-')) {
                     $result = array_merge($result, $this->parseSegment($value, $min, $max, $start));
                     continue;
                 }
@@ -88,9 +91,9 @@ class CronParser
                 }
                 $result[] = (int)$value;
             }
-        } elseif (strpos($string, '/') !== false) {
+        } elseif (str_contains($string, '/')) {
             $exploded = explode('/', $string);
-            if (strpos($exploded[0], '-') !== false) {
+            if (str_contains($exploded[0], '-')) {
                 [$nMin, $nMax] = explode('-', $exploded[0]);
                 $nMin > $min && $min = (int)$nMin;
                 $nMax < $max && $max = (int)$nMax;
@@ -100,7 +103,7 @@ class CronParser
                 $result[] = $i;
                 $i += $exploded[1];
             }
-        } elseif (strpos($string, '-') !== false) {
+        } elseif (str_contains($string, '-')) {
             $result = array_merge($result, $this->parseSegment($string . '/1', $min, $max, $start));
         } elseif ($this->between((int)$string, $min > $start ? $min : $start, $max)) {
             $result[] = (int)$string;

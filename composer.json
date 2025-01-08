@@ -15,8 +15,8 @@
     "source": "https://github.com/localzet/Cron"
   },
   "require": {
-    "php": ">=7.1",
-    "localzet/server": "^4.1"
+    "php": "^8",
+    "localzet/server": "^4.5"
   },
   "autoload": {
     "psr-4": {
