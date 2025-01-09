@@ -96,9 +96,7 @@ class Cron
      */
     public static function remove($id): bool
     {
-        if ($id instanceof Cron) {
-            $id = $id->getId();
-        }
+        $id = $id instanceof Cron ? $id->getId() : $id;
         if (!isset(static::$instances[$id])) {
             return false;
         }
@@ -130,6 +128,7 @@ class Cron
         $callback = function () use (&$callback) {
             $parser = new CronParser();
             $now = time();
+
             foreach (static::$instances as $crontab) {
                 $rule = $crontab->getRule();
                 $cb = $crontab->getCallback();
@@ -139,8 +138,7 @@ class Cron
                 $times = $parser->parse($rule);
                 foreach ($times as $time) {
                     $t = $time - $now;
-
-                    Timer::add($t > 0 ? $t : 0.000001, $cb, null, false);
+                    Timer::add(max(0.000001, $t), $cb, null, false);
                 }
             }
             Timer::add(60 - time() % 60, $callback, null, false);
