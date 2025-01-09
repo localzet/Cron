@@ -5,29 +5,14 @@ namespace localzet;
 class Cron
 {
     /**
-     * @var string Строка правила cron
-     */
-    protected $_rule;
-
-    /**
-     * @var callable Функция обратного вызова для выполнения
-     */
-    protected $_callback;
-
-    /**
-     * @var string Имя задания cron
-     */
-    protected $_name;
-
-    /**
      * @var int Уникальный идентификатор задания cron
      */
-    protected $_id;
+    protected int $id;
 
     /**
      * @var array Список всех экземпляров заданий cron
      */
-    protected static $_instances = [];
+    protected static array $instances = [];
 
     /**
      * Конструктор Crontab.
@@ -36,13 +21,10 @@ class Cron
      * @param callable $callback Функция обратного вызова для выполнения
      * @param string $name Имя задания cron
      */
-    public function __construct(string $rule, callable $callback, string $name = '')
+    public function __construct(protected string $rule, protected $callback, protected string $name = '')
     {
-        $this->_rule = $rule;
-        $this->_callback = $callback;
-        $this->_name = $name;
-        $this->_id = static::createId();
-        static::$_instances[$this->_id] = $this;
+        $this->id = static::createId();
+        static::$instances[$this->id] = $this;
         static::tryInit();
     }
 
@@ -53,7 +35,7 @@ class Cron
      */
     public function getRule(): string
     {
-        return $this->_rule;
+        return $this->rule;
     }
 
     /**
@@ -63,7 +45,7 @@ class Cron
      */
     public function getCallback(): callable
     {
-        return $this->_callback;
+        return $this->callback;
     }
 
     /**
@@ -73,7 +55,7 @@ class Cron
      */
     public function getName(): string
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -83,7 +65,7 @@ class Cron
      */
     public function getId(): int
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -93,7 +75,7 @@ class Cron
      */
     public function destroy(): bool
     {
-        return static::remove($this->_id);
+        return static::remove($this->id);
     }
 
     /**
@@ -103,7 +85,7 @@ class Cron
      */
     public static function getAll(): array
     {
-        return static::$_instances;
+        return static::$instances;
     }
 
     /**
@@ -117,10 +99,10 @@ class Cron
         if ($id instanceof Cron) {
             $id = $id->getId();
         }
-        if (!isset(static::$_instances[$id])) {
+        if (!isset(static::$instances[$id])) {
             return false;
         }
-        unset(static::$_instances[$id]);
+        unset(static::$instances[$id]);
         return true;
     }
 
@@ -147,31 +129,20 @@ class Cron
         $inited = true;
         $callback = function () use (&$callback) {
             $parser = new CronParser();
-            foreach (static::$_instances as $crontab) {
+            foreach (static::$instances as $crontab) {
                 $rule = $crontab->getRule();
                 $cb = $crontab->getCallback();
                 if (!$cb || !$rule) {
                     continue;
                 }
                 $times = $parser->parse($rule);
-                $now = time();
                 foreach ($times as $time) {
-                    $t = $time - $now;
-                    if ($t <= 0) {
-                        $t = 0.000001;
-                    }
-                    Timer::add($t, $cb, null, false);
+                    Timer::add(max(0.000001, $time - time()), $cb, null, false);
                 }
             }
-            Timer::add(60 - time() % 60, $callback, null, false);
+            Timer::add(1, $callback, null, false);
         };
 
-        $next_time = time() % 60;
-        if ($next_time == 0) {
-            $next_time = 0.00001;
-        } else {
-            $next_time = 60 - $next_time;
-        }
-        Timer::add($next_time, $callback, null, false);
+        Timer::add(max(0.000001, (time() + 1) - time()), $callback, null, false);
     }
 }

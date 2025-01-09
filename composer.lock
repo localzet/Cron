@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f7ed66db89965f7f92dbb290a219194",
+    "content-hash": "f128ffcad0e98e9e59e1755cb193ed28",
     "packages": [
         {
             "name": "localzet/events",
@@ -155,7 +155,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1"
+        "php": "^8"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
