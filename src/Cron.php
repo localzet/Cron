@@ -129,6 +129,7 @@ class Cron
         $inited = true;
         $callback = function () use (&$callback) {
             $parser = new CronParser();
+            $now = time();
             foreach (static::$instances as $crontab) {
                 $rule = $crontab->getRule();
                 $cb = $crontab->getCallback();
@@ -137,12 +138,14 @@ class Cron
                 }
                 $times = $parser->parse($rule);
                 foreach ($times as $time) {
-                    Timer::add(max(0.000001, $time - time()), $cb, null, false);
+                    $t = $time - $now;
+
+                    Timer::add($t > 0 ? $t : 0.000001, $cb, null, false);
                 }
             }
-            Timer::add(1, $callback, null, false);
+            Timer::add(60 - time() % 60, $callback, null, false);
         };
 
-        Timer::add(max(0.000001, (time() + 1) - time()), $callback, null, false);
+        Timer::add(0.000001, $callback, null, false);
     }
 }
