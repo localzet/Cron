@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package Localzet Cron
+ * @link https://github.com/localzet/Cron
+ * @author Ivan Zorin <creator@localzet.com>
+ * @copyright Copyright (c) 2026 Localzet Group
+ * @license https://www.gnu.org/licenses/agpl-3.0 GNU Affero General Public License v3.0 or later
+ */
+
 namespace localzet;
 
 use InvalidArgumentException;
@@ -25,7 +33,7 @@ class CronParser
      * @return int[]
      * @throws InvalidArgumentException
      */
-    public function parse(string $crontab_string, int $start_time = null): array
+    public function parse(string $crontab_string, ?int $start_time = null): array
     {
         if (!$this->isValid($crontab_string)) {
             throw new InvalidArgumentException('Invalid cron string: ' . $crontab_string);
@@ -58,6 +66,11 @@ class CronParser
                 return false;
             }
         }
+        try {
+            $this->parseDate($crontab_string);
+        } catch (InvalidArgumentException) {
+            return false;
+        }
         return true;
     }
 
@@ -69,7 +82,7 @@ class CronParser
      * @param int|null $start
      * @return array
      */
-    protected function parseSegment(string $string, int $min, int $max, int $start = null)
+    protected function parseSegment(string $string, int $min, int $max, ?int $start = null)
     {
         if ($start === null || $start < $min) {
             $start = $min;
@@ -93,6 +106,9 @@ class CronParser
             }
         } elseif (str_contains($string, '/')) {
             $exploded = explode('/', $string);
+            if (count($exploded) !== 2 || !ctype_digit($exploded[1]) || (int)$exploded[1] < 1) {
+                throw new InvalidArgumentException('Cron step must be a positive integer.');
+            }
             if (str_contains($exploded[0], '-')) {
                 [$nMin, $nMax] = explode('-', $exploded[0]);
                 $nMin > $min && $min = (int)$nMin;
