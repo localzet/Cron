@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f128ffcad0e98e9e59e1755cb193ed28",
+    "content-hash": "fdf68d9e35a199141255326889d03c2b",
     "packages": [
         {
             "name": "localzet/events",
@@ -61,16 +61,16 @@
         },
         {
             "name": "localzet/server",
-            "version": "v4.5.0",
+            "version": "v4.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/localzet/Server.git",
-                "reference": "0106452ba80d5418fdec6d652703e13362f0544b"
+                "reference": "07764f3ca0af09f2945a00b53fc8e54b2acc4766"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/localzet/Server/zipball/0106452ba80d5418fdec6d652703e13362f0544b",
-                "reference": "0106452ba80d5418fdec6d652703e13362f0544b",
+                "url": "https://api.github.com/repos/localzet/Server/zipball/07764f3ca0af09f2945a00b53fc8e54b2acc4766",
+                "reference": "07764f3ca0af09f2945a00b53fc8e54b2acc4766",
                 "shasum": ""
             },
             "require": {
@@ -79,24 +79,30 @@
                 "ext-posix": "*",
                 "ext-sockets": "*",
                 "localzet/events": "^1",
-                "php": "^8"
+                "php": "^8.1 || ^8.2"
             },
             "conflict": {
                 "ext-swow": "<v1.0.0"
             },
             "require-dev": {
-                "rector/rector": "*"
+                "friendsofphp/php-cs-fixer": "*",
+                "phpunit/phpunit": "^9 || ^10",
+                "rector/rector": "*",
+                "vimeo/psalm": "*"
             },
             "suggest": {
-                "ext-ev": "For better performance",
-                "ext-event": "For better performance",
-                "ext-redis": "For Redis Session Handler",
-                "ext-swoole": "For better performance",
-                "ext-swow": "For better performance",
-                "ext-uv": "For better performance",
-                "mongodb/mongodb": "For Mongo Session Handler"
+                "ext-ev": "For better performance with libev.",
+                "ext-event": "For better performance with libevent.",
+                "ext-redis": "For Redis Session Handler support.",
+                "ext-swoole": "For enhanced async capabilities and performance.",
+                "ext-swow": "For next-gen async PHP features.",
+                "ext-uv": "For better performance with libuv.",
+                "mongodb/mongodb": "For MongoDB Session Handler support."
             },
-            "type": "library",
+            "type": "project",
+            "extra": {
+                "branch-alias": []
+            },
             "autoload": {
                 "files": [
                     "Helpers.php"
@@ -118,23 +124,24 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Localzet Server is an asynchronous event-based server in PHP, offering high performance and scalability using modern technologies and standards.",
+            "description": "Localzet Server is a high-performance asynchronous event-driven server for PHP, designed for modern applications with scalability and security in mind.",
             "keywords": [
                 "AGPL",
+                "async",
                 "asynchronous",
-                "event-based",
-                "json",
-                "localzet",
+                "event-driven",
                 "pcntl",
                 "performance",
                 "php",
                 "posix",
                 "psr",
+                "scalability",
                 "security",
                 "server",
                 "sockets"
             ],
             "support": {
+                "docs": "https://docs.localzet.com",
                 "email": "support@localzet.com",
                 "issues": "https://github.com/localzet/Server/issues",
                 "source": "https://github.com/localzet/Server"
@@ -145,18 +152,18 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-01T21:14:34+00:00"
+            "time": "2025-05-06T23:36:38+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8"
+        "php": "^8.1"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

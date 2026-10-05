@@ -1,6 +1,6 @@
 {
   "name": "localzet/cron",
-  "description": "",
+  "description": "Timer-based cron scheduling for Localzet Server with five- and six-field expressions.",
   "license": "AGPL-3.0-or-later",
   "authors": [
     {
@@ -22,5 +22,9 @@
     "psr-4": {
       "localzet\\": "src"
     }
+  },
+  "scripts": {
+    "test": "php tests/regression.php",
+    "lint": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
   }
 }
