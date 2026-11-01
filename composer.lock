@@ -4,104 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdf68d9e35a199141255326889d03c2b",
+    "content-hash": "63a845a805593e640e7427200a473aff",
     "packages": [
         {
-            "name": "localzet/events",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/localzet/Events.git",
-                "reference": "1fbd7ea366482844296cbb0f212b42a7c84546e9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/localzet/Events/zipball/1fbd7ea366482844296cbb0f212b42a7c84546e9",
-                "reference": "1fbd7ea366482844296cbb0f212b42a7c84546e9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "localzet\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AGPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Zorin",
-                    "email": "creator@localzet.com",
-                    "homepage": "https://github.com/localzet",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Simple Events Manage Library",
-            "keywords": [
-                "events",
-                "localzet"
-            ],
-            "support": {
-                "email": "support@localzet.com",
-                "issues": "https://github.com/localzet/Events/issues",
-                "source": "https://github.com/localzet/Events"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/localzet",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-10-15T19:25:13+00:00"
-        },
-        {
             "name": "localzet/server",
-            "version": "v4.5.3",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/localzet/Server.git",
-                "reference": "07764f3ca0af09f2945a00b53fc8e54b2acc4766"
+                "reference": "8c862f887a99f1deb4a266143743159e3dddb282"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/localzet/Server/zipball/07764f3ca0af09f2945a00b53fc8e54b2acc4766",
-                "reference": "07764f3ca0af09f2945a00b53fc8e54b2acc4766",
+                "url": "https://api.github.com/repos/localzet/Server/zipball/8c862f887a99f1deb4a266143743159e3dddb282",
+                "reference": "8c862f887a99f1deb4a266143743159e3dddb282",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "ext-pcntl": "*",
-                "ext-posix": "*",
-                "ext-sockets": "*",
-                "localzet/events": "^1",
-                "php": "^8.1 || ^8.2"
-            },
-            "conflict": {
-                "ext-swow": "<v1.0.0"
+                "php": ">=8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "*",
-                "phpunit/phpunit": "^9 || ^10",
-                "rector/rector": "*",
-                "vimeo/psalm": "*"
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.5 || ^11 || ^12",
+                "revolt/event-loop": "^1.0"
             },
             "suggest": {
-                "ext-ev": "For better performance with libev.",
-                "ext-event": "For better performance with libevent.",
-                "ext-redis": "For Redis Session Handler support.",
-                "ext-swoole": "For enhanced async capabilities and performance.",
-                "ext-swow": "For next-gen async PHP features.",
-                "ext-uv": "For better performance with libuv.",
-                "mongodb/mongodb": "For MongoDB Session Handler support."
+                "ext-ev": "Native libev backend.",
+                "ext-event": "Native libevent backend.",
+                "ext-pcntl": "Multi-process supervision and hot-upgrade on Unix.",
+                "ext-posix": "Unix process, signal and privilege management.",
+                "ext-redis": "Redis-backed HTTP sessions.",
+                "ext-sockets": "Socket tuning and zero-downtime hot-upgrade descriptor passing.",
+                "ext-swoole": "Optional native Swoole coroutine event backend.",
+                "ext-swow": "Optional native Swow coroutine event backend.",
+                "localzet/events": "Optional Localzet lifecycle event bus integration.",
+                "mongodb/mongodb": "MongoDB-backed HTTP sessions.",
+                "revolt/event-loop": "Fiber-based event loop backend and non-blocking Timer::sleep()."
             },
-            "type": "project",
+            "type": "library",
             "extra": {
-                "branch-alias": []
+                "branch-alias": {
+                    "dev-main": "7.0.x-dev"
+                }
             },
             "autoload": {
                 "files": [
@@ -109,7 +54,7 @@
                 ],
                 "psr-4": {
                     "localzet\\": "",
-                    "localzet\\Server\\": "src"
+                    "localzet\\Server\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -124,24 +69,18 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Localzet Server is a high-performance asynchronous event-driven server for PHP, designed for modern applications with scalability and security in mind.",
+            "description": "High-performance asynchronous event-driven server for PHP.",
             "keywords": [
-                "AGPL",
-                "async",
                 "asynchronous",
-                "event-driven",
-                "pcntl",
-                "performance",
-                "php",
-                "posix",
-                "psr",
-                "scalability",
-                "security",
+                "event-loop",
+                "http",
                 "server",
-                "sockets"
+                "tcp",
+                "udp",
+                "websocket"
             ],
             "support": {
-                "docs": "https://docs.localzet.com",
+                "docs": "https://server.localzet.com",
                 "email": "support@localzet.com",
                 "issues": "https://github.com/localzet/Server/issues",
                 "source": "https://github.com/localzet/Server"
@@ -152,7 +91,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-06T23:36:38+00:00"
+            "time": "2026-09-30T17:12:37+00:00"
         }
     ],
     "packages-dev": [],

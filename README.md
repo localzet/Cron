@@ -8,12 +8,12 @@ Timer-based cron scheduling for Localzet Server with five- and six-field express
 
 Regression tests reject zero, negative and malformed steps. Full cron calendar semantics, timezone/DST behavior and scheduling from the middle of a minute still need dedicated coverage.
 
-This is a Server 4.x component; Server 7.x compatibility is not established.
+This release targets Localzet Server 7.x.
 
 ## Dependencies
 
 - `php`: `^8.1`
-- `localzet/server`: `^4.5`
+- `localzet/server`: `^7.0`
 
 ## Installation
 
