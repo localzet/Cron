@@ -8,7 +8,7 @@ Timer-based cron scheduling for Localzet Server with five- and six-field express
 
 Regression tests reject zero, negative and malformed steps. Full cron calendar semantics, timezone/DST behavior and scheduling from the middle of a minute still need dedicated coverage.
 
-This release targets Localzet Server 7.x.
+The current branch targets Localzet Server 7.x; the published stable `v1.0.3` requires Server `^4.5`.
 
 ## Dependencies
 
@@ -18,8 +18,10 @@ This release targets Localzet Server 7.x.
 ## Installation
 
 ```sh
-composer require localzet/cron
+composer require localzet/cron:dev-main
 ```
+
+Use the current `dev-main` branch for Server 7. This is not a stable release; do not pin it in production before a compatible tag is published.
 
 ## Development checks
 
