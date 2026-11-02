@@ -6,9 +6,9 @@ Timer-based cron scheduling for Localzet Server with five- and six-field express
 
 ## Status and compatibility
 
-Regression tests reject zero, negative and malformed steps. Full cron calendar semantics, timezone/DST behavior and scheduling from the middle of a minute still need dedicated coverage.
+The parser supports five-field minute schedules and six-field second schedules. It aligns second-based rules to clock seconds and skips times that have already passed in the current minute. Calendar edge cases, timezone/DST behavior and missed-run recovery are outside the current scope.
 
-The current branch targets Localzet Server 7.x; the published stable `v1.0.3` requires Server `^4.5`.
+The current branch targets Localzet Server 7.x. Published `v1.x` releases require Server `^4.5`; this is the Server 7 release line.
 
 ## Dependencies
 
@@ -18,10 +18,24 @@ The current branch targets Localzet Server 7.x; the published stable `v1.0.3` re
 ## Installation
 
 ```sh
-composer require localzet/cron:dev-main
+composer require localzet/cron:^2.0
 ```
 
-Use the current `dev-main` branch for Server 7. This is not a stable release; do not pin it in production before a compatible tag is published.
+Use the 2.x release line with Server 7. The 1.x release line targets Server 4.
+
+## Usage
+
+Register a task while bootstrapping an application that is already running under Localzet Server:
+
+```php
+use localzet\Cron;
+
+new Cron('*/15 * * * * *', static function (): void {
+    refreshCache();
+}, 'refresh-cache');
+```
+
+Five-field rules use minute precision. Six-field rules include seconds. Callbacks run on the Server event loop, so keep them non-blocking and hand long-running work to a queue or another process.
 
 ## Development checks
 

@@ -47,6 +47,13 @@ if ($parser->parse('*/15 * * * * *', $start) !== [$start, $start + 15, $start + 
 if ($parser->parse('0,30 * * * * *', $start) !== [$start, $start + 30]) {
     throw new RuntimeException('Valid second lists changed.');
 }
+$midMinute = strtotime('2026-10-05 12:00:30 UTC');
+if ($parser->parse('*/15 * * * * *', $midMinute) !== [$midMinute, $midMinute + 15]) {
+    throw new RuntimeException('Six-field schedules must use clock-aligned seconds after the start time.');
+}
+if ($parser->parse('* * * * *', $midMinute) !== []) {
+    throw new RuntimeException('Five-field schedules must not run after the current minute boundary.');
+}
 echo "Cron parser regression passed.\n";
 
 if (class_exists(localzet\Server\Events\Select::class)) {

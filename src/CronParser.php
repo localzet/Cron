@@ -63,9 +63,14 @@ class CronParser
             && in_array((int)date('n', $start_time), $date['month'])
         ) {
             $result = [];
+            $minuteStart = $start_time - (int)date('s', $start_time);
+            $currentSecond = (int)date('s', $start_time);
             foreach ($date['second'] as $second) {
-                $result[] = $start_time + $second;
+                if ($second >= $currentSecond) {
+                    $result[] = $minuteStart + $second;
+                }
             }
+            sort($result, SORT_NUMERIC);
             return $result;
         }
         return [];
