@@ -8,25 +8,25 @@
     "packages": [
         {
             "name": "localzet/server",
-            "version": "v7.0.0",
+            "version": "v7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/localzet/Server.git",
-                "reference": "8c862f887a99f1deb4a266143743159e3dddb282"
+                "reference": "316abb8735b06a05081d770a066b12aefa996962"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/localzet/Server/zipball/8c862f887a99f1deb4a266143743159e3dddb282",
-                "reference": "8c862f887a99f1deb4a266143743159e3dddb282",
+                "url": "https://api.github.com/repos/localzet/Server/zipball/316abb8735b06a05081d770a066b12aefa996962",
+                "reference": "316abb8735b06a05081d770a066b12aefa996962",
                 "shasum": ""
             },
             "require": {
+                "ext-ctype": "*",
                 "ext-json": "*",
                 "php": ">=8.1"
             },
             "require-dev": {
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^10.5 || ^11 || ^12",
+                "phpstan/phpstan": "^2.3",
                 "revolt/event-loop": "^1.0"
             },
             "suggest": {
@@ -91,7 +91,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-30T17:12:37+00:00"
+            "time": "2026-11-12T00:11:02+00:00"
         }
     ],
     "packages-dev": [],
