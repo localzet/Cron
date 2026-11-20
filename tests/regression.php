@@ -69,22 +69,28 @@ if (class_exists(localzet\Server\Events\Select::class)) {
     }
     echo "Server 7 timer integration passed.\n";
 
-    while ((int)date('s') >= 50) {
+    while ((int)date('s') >= 45) {
         usleep(100_000);
     }
     $currentSecond = (int)date('s');
-    $rule = implode(',', [$currentSecond + 2, $currentSecond + 4, $currentSecond + 6]) . ' * * * * *';
+    $rule = implode(',', [$currentSecond + 5, $currentSecond + 10, $currentSecond + 15]) . ' * * * * *';
     $scheduledTimers = new ReflectionProperty(localzet\Cron::class, 'scheduledTimers');
     $scheduledTimers->setAccessible(true);
     $destroyedOccurrences = 0;
     $removedCallbackFired = false;
+    $deadlineExceeded = false;
+    $deadlineTimer = localzet\Timer::add(20, static function () use (&$deadlineExceeded, $loop): void {
+        $deadlineExceeded = true;
+        $loop->stop();
+    }, null, false);
     $destroyedJob = null;
-    $destroyedJob = new localzet\Cron($rule, static function () use (&$destroyedOccurrences, &$destroyedJob, $scheduledTimers, $loop): void {
+    $destroyedJob = new localzet\Cron($rule, static function () use (&$destroyedOccurrences, &$destroyedJob, $scheduledTimers, $deadlineTimer, $loop): void {
         ++$destroyedOccurrences;
         $pending = $scheduledTimers->getValue()[$destroyedJob->getId()] ?? [];
         if (count($pending) !== 2) {
             throw new RuntimeException('A fired cron timer was not removed from tracking.');
         }
+        localzet\Timer::del($deadlineTimer);
         if (!$destroyedJob->destroy()) {
             throw new RuntimeException('Cron job destruction failed.');
         }
@@ -114,7 +120,7 @@ if (class_exists(localzet\Server\Events\Select::class)) {
     }, null, false);
     $loop->run();
 
-    if ($destroyedOccurrences !== 1 || $removedCallbackFired) {
+    if ($deadlineExceeded || $destroyedOccurrences !== 1 || $removedCallbackFired) {
         throw new RuntimeException('Cron job removal did not preserve exactly the first scheduled occurrence.');
     }
     localzet\Timer::delAll();
