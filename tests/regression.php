@@ -68,4 +68,61 @@ if (class_exists(localzet\Server\Events\Select::class)) {
         throw new RuntimeException('Server 7 timer callback did not fire.');
     }
     echo "Server 7 timer integration passed.\n";
+
+    while ((int)date('s') >= 45) {
+        usleep(100_000);
+    }
+    $currentSecond = (int)date('s');
+    $rule = implode(',', [$currentSecond + 5, $currentSecond + 10, $currentSecond + 15]) . ' * * * * *';
+    $scheduledTimers = new ReflectionProperty(localzet\Cron::class, 'scheduledTimers');
+    $scheduledTimers->setAccessible(true);
+    $destroyedOccurrences = 0;
+    $removedCallbackFired = false;
+    $deadlineExceeded = false;
+    $deadlineTimer = localzet\Timer::add(20, static function () use (&$deadlineExceeded, $loop): void {
+        $deadlineExceeded = true;
+        $loop->stop();
+    }, null, false);
+    $destroyedJob = null;
+    $destroyedJob = new localzet\Cron($rule, static function () use (&$destroyedOccurrences, &$destroyedJob, $scheduledTimers, $deadlineTimer, $loop): void {
+        ++$destroyedOccurrences;
+        $pending = $scheduledTimers->getValue()[$destroyedJob->getId()] ?? [];
+        if (count($pending) !== 2) {
+            throw new RuntimeException('A fired cron timer was not removed from tracking.');
+        }
+        localzet\Timer::del($deadlineTimer);
+        if (!$destroyedJob->destroy()) {
+            throw new RuntimeException('Cron job destruction failed.');
+        }
+        if (isset($scheduledTimers->getValue()[$destroyedJob->getId()])) {
+            throw new RuntimeException('Destroying a cron job left timer IDs tracked.');
+        }
+        if (localzet\Timer::getAll()['count'] !== 1) {
+            throw new RuntimeException('Destroying a cron job did not cancel all remaining timers.');
+        }
+        $loop->stop();
+    });
+    $removedJob = new localzet\Cron($rule, static function () use (&$removedCallbackFired): void {
+        $removedCallbackFired = true;
+    });
+    localzet\Timer::add(0.01, static function () use ($removedJob, $scheduledTimers): void {
+        $jobTimerCount = count($scheduledTimers->getValue()[$removedJob->getId()] ?? []);
+        $timerCount = localzet\Timer::getAll()['count'];
+        if (!localzet\Cron::remove($removedJob->getId())) {
+            throw new RuntimeException('Cron::remove() failed.');
+        }
+        if (isset($scheduledTimers->getValue()[$removedJob->getId()])) {
+            throw new RuntimeException('Cron::remove() left timer IDs tracked.');
+        }
+        if (localzet\Timer::getAll()['count'] !== $timerCount - $jobTimerCount) {
+            throw new RuntimeException('Cron::remove() did not cancel all future occurrence timers.');
+        }
+    }, null, false);
+    $loop->run();
+
+    if ($deadlineExceeded || $destroyedOccurrences !== 1 || $removedCallbackFired) {
+        throw new RuntimeException('Cron job removal did not preserve exactly the first scheduled occurrence.');
+    }
+    localzet\Timer::delAll();
+    echo "Cron job timer cancellation passed.\n";
 }

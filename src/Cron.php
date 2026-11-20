@@ -39,6 +39,11 @@ class Cron
      */
     protected static array $instances = [];
 
+    /** @var array<int, array<int, int>> Timer IDs grouped by job and occurrence */
+    protected static array $scheduledTimers = [];
+
+    protected static int $nextScheduledTimerToken = 0;
+
     /**
      * Конструктор Crontab.
      *
@@ -125,6 +130,10 @@ class Cron
         if (!isset(static::$instances[$id])) {
             return false;
         }
+        foreach (static::$scheduledTimers[$id] ?? [] as $timerId) {
+            Timer::del($timerId);
+        }
+        unset(static::$scheduledTimers[$id]);
         unset(static::$instances[$id]);
         return true;
     }
@@ -163,7 +172,19 @@ class Cron
                 $times = $parser->parse($rule);
                 foreach ($times as $time) {
                     $t = $time - $now;
-                    Timer::add(max(0.000001, $t), $cb, null, false);
+                    $jobId = $crontab->getId();
+                    $cronClass = static::class;
+                    $timerToken = ++$cronClass::$nextScheduledTimerToken;
+                    $timerId = Timer::add(max(0.000001, $t), static function () use ($cronClass, $jobId, $timerToken, $cb): void {
+                        unset($cronClass::$scheduledTimers[$jobId][$timerToken]);
+                        if (empty($cronClass::$scheduledTimers[$jobId])) {
+                            unset($cronClass::$scheduledTimers[$jobId]);
+                        }
+                        if (isset($cronClass::$instances[$jobId])) {
+                            $cb();
+                        }
+                    }, null, false);
+                    $cronClass::$scheduledTimers[$jobId][$timerToken] = $timerId;
                 }
             }
             Timer::add(60 - time() % 60, $callback, null, false);
