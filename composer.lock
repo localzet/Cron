@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "localzet/server",
-            "version": "v7.2.0",
+            "version": "v7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/localzet/Server.git",
-                "reference": "5bdb9ac73f0855f9f8f515929be77d4a694a5333"
+                "reference": "ba0868b61928ce5dcc75ed9f28a21d4c9a832b29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/localzet/Server/zipball/5bdb9ac73f0855f9f8f515929be77d4a694a5333",
-                "reference": "5bdb9ac73f0855f9f8f515929be77d4a694a5333",
+                "url": "https://api.github.com/repos/localzet/Server/zipball/ba0868b61928ce5dcc75ed9f28a21d4c9a832b29",
+                "reference": "ba0868b61928ce5dcc75ed9f28a21d4c9a832b29",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-20T03:43:14+00:00"
+            "time": "2026-11-21T01:00:18+00:00"
         }
     ],
     "packages-dev": [],
